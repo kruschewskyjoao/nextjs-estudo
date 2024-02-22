@@ -11,7 +11,6 @@ export default function Home() {
             className={styles.hero}
             alt="Logo Tarefas"
             src={heroImg}
-            priority
           />
         </div>
         <h1 className={styles.title}>Sistema feito para você organizar <br /> seus estudos e tarefas</h1>
