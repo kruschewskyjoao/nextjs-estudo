@@ -22,11 +22,10 @@ const { data: session, status } = useSession();
         </nav>
         { status === "loading" ? (
           <>
-          
           </>
         ): session ? (
-          <button className={styles.loginButton} onClick={() => signOut}>
-          Olá session?.user?.name
+          <button className={styles.loginButton} onClick={() => signOut()}>
+          Olá {session?.user?.name}
         </button>
         ) : (
           <button className={styles.loginButton} onClick={() => signIn("github")}>
