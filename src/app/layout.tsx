@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import { Header } from "../components/header/header";
+import SessionProvider from "../components/SessionProvider";
 
 const inter = Roboto({
   subsets: ["latin"],
@@ -22,8 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <main className={inter.className}>
-          <Header />
-          {children}
+          <SessionProvider>
+            {children}
+          </SessionProvider>
         </main>
       </body>
     </html>
