@@ -16,9 +16,11 @@ const { data: session, status } = useSession();
               Tarefas<span>+</span>
             </h2>
           </Link>
-        <Link href="/dashboad" className={styles.link}>
-          Meu painel
-        </Link>
+          { session && (
+            <Link href="/dashboard" className={styles.link}>
+              Meu painel
+            </Link>
+          )}
         </nav>
         { status === "loading" ? (
           <>
