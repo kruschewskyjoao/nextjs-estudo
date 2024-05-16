@@ -5,11 +5,19 @@ import Head from 'next/head';
 import { Textarea } from '../../components/textArea/textArea';
 import { FiShare2 } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
+import { ChangeEvent, useState } from 'react';
 
 export default async function Page() {
   const session = await getServerSession();
   if(!session?.user) {
     redirect("/");
+  }
+
+  const [input, setInput] = useState('');
+  const [publicTask, setPublicTask] = useState(false);
+
+  function handleChangePublic(e: ChangeEvent<HTMLInputElement>) {
+    setPublicTask(e.target.checked);
   }
 
   return (
@@ -22,9 +30,9 @@ export default async function Page() {
           <div className={styles.contentForm}>
             <h1 className={styles.title}>Qual sua tarefa?</h1>
             <form>
-              <Textarea placeholder='Digite qual sua tarefa...' />
+              <Textarea placeholder='Digite qual sua tarefa...' value={input} onChange={(e:ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value) }/>
               <div className={styles.checkboxArea}>
-                <input type='checkbox' className={styles.checkbox} />
+                <input type='checkbox' className={styles.checkbox} checked={publicTask} onChange={handleChangePublic} />
                 <label className={styles.label}>Deixar tarefa publica?</label>
               </div>
               <button type='submit' className={styles.button}>Registrar</button>
