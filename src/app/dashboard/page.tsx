@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Head from 'next/head';
 import { Textarea } from '../../components/textArea/textArea';
+import { FiShare2 } from 'react-icons/fi';
+import { FaTrash } from 'react-icons/fa';
 
 export default async function Page() {
   const session = await getServerSession();
@@ -28,6 +30,26 @@ export default async function Page() {
               <button type='submit' className={styles.button}>Registrar</button>
             </form>
           </div>
+        </section>
+
+        <section className={styles.taskContainer}>
+          <h1>Minhas tarefas</h1>
+
+          <article className={styles.task}>
+            <div className={styles.tagContainer}>
+              <label className={styles.tag}>PUBLICO</label>
+              <button className={styles.shareButton}>
+                <FiShare2 size={22} color='blue'/>
+              </button>
+            </div>
+          
+            <div className={styles.taskContent}>
+              <p>minha primeira tarefa de ex</p>
+              <button className={styles.trashButton}>
+                <FaTrash size={24} color='red'/>
+              </button>
+            </div>
+          </article>
         </section>
       </main>
     </div>
