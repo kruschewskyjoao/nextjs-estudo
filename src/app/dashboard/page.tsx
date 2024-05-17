@@ -1,23 +1,43 @@
+"use client"
 import styles from './styles.module.css';
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import Head from 'next/head';
 import { Textarea } from '../../components/textArea/textArea';
 import { FiShare2 } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, FormEvent } from 'react';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import { db } from '../../services/firebaseConnection';
+import { addDoc, collection } from 'firebase/firestore'
 
-export default async function Page() {
-  const session = await getServerSession();
-  if(!session?.user) {
-    redirect("/");
+export default function Page() {
+  const { data: session } = useSession();
+  if(session === null) {
+    redirect('/');
   }
-
   const [input, setInput] = useState('');
   const [publicTask, setPublicTask] = useState(false);
 
   function handleChangePublic(e: ChangeEvent<HTMLInputElement>) {
     setPublicTask(e.target.checked);
+  }
+
+  async function handleRegisterTask(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (input === '') return;
+
+    try {
+      await addDoc(collection(db, 'tasks'), {
+        task: input,
+        created: new Date(),
+        public: publicTask,
+        user: session?.user?.email
+      })
+      setInput('');
+      setPublicTask(false);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -29,7 +49,7 @@ export default async function Page() {
         <section className={styles.content}>
           <div className={styles.contentForm}>
             <h1 className={styles.title}>Qual sua tarefa?</h1>
-            <form>
+            <form onSubmit={handleRegisterTask}>
               <Textarea placeholder='Digite qual sua tarefa...' value={input} onChange={(e:ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value) }/>
               <div className={styles.checkboxArea}>
                 <input type='checkbox' className={styles.checkbox} checked={publicTask} onChange={handleChangePublic} />

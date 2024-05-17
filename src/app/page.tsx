@@ -1,7 +1,6 @@
 import styles from './page.module.css'
 import Image from 'next/image';
 import heroImg from '../../public/hero.png'
-import { Header } from "../components/header/header";
 
 export default function Home() {
   return (
