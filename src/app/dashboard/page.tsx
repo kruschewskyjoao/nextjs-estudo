@@ -4,19 +4,36 @@ import Head from 'next/head';
 import { Textarea } from '../../components/textArea/textArea';
 import { FiShare2 } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
-import { ChangeEvent, useState, FormEvent } from 'react';
+import { ChangeEvent, useState, FormEvent, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { db } from '../../services/firebaseConnection';
-import { addDoc, collection } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  query,
+  orderBy,
+  where,
+  onSnapshot } from 'firebase/firestore';
 
 export default function Page() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   if(session === null) {
     redirect('/');
   }
   const [input, setInput] = useState('');
   const [publicTask, setPublicTask] = useState(false);
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    async function loadTarefas() {
+      const tarefasRef = collection(db, 'tasks');
+      const q = query(tarefasRef, orderBy('created', 'desc'), where('user', '==', session?.user?.email));
+      onSnapshot(q, (snapshot): void => {
+        console.log(snapshot)
+      })
+    }
+    loadTarefas();
+  }, [session?.user?.email, status])
 
   function handleChangePublic(e: ChangeEvent<HTMLInputElement>) {
     setPublicTask(e.target.checked);
